@@ -1,0 +1,34 @@
+[project]
+authors = [
+  {name = "Christian S Perone", email = ""},
+]
+dependencies = []
+description = "Add your description here"
+name = "pyevolve"
+readme = "README.md"
+requires-python = ">=3.13.2"
+version = "0.6.0"
+
+[dependency-groups]
+dev = [
+  "coverage>=7.8.2",
+  "flake8>=7.2.0",
+  "future>=1.0.0",
+  "mock>=5.2.0",
+  "pytest>=8.3.5",
+]
+
+[tool.pytest.ini_options]
+python_files = ["test_*.py", "*_tests.py"]
+testpaths = ["tests"]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pyevolve"]
+
+[tool.ruff.lint]
+ignore = ["F401"]
+ignore-init-module-imports = true

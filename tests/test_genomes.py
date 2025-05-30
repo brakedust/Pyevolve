@@ -1,5 +1,6 @@
 # flake8: noqa
-from collections import Iterable
+# from collections import Iterable
+from typing import Iterable
 from unittest import TestCase
 
 from pyevolve import G1DBinaryString
@@ -15,26 +16,25 @@ from pyevolve.GTree import GTreeNodeGP
 
 
 class G1DBinaryStringTestCase(TestCase):
-
     # def setUp(self):
     #     self._stats = Statistics.Statistics()
 
     def test_create1DBinary_default(self):
         _genome = G1DBinaryString.G1DBinaryString()
-        self.assertTrue(hasattr(_genome, 'genomeList'))
-        self.assertTrue(hasattr(_genome, 'genomeSize'))
+        self.assertTrue(hasattr(_genome, "genomeList"))
+        self.assertTrue(hasattr(_genome, "genomeSize"))
         self.assertIsInstance(_genome.genomeSize, int)
-        self.assertTrue(hasattr(_genome, 'initializator'))
-        self.assertTrue(hasattr(_genome, 'mutator'))
-        self.assertTrue(hasattr(_genome, 'crossover'))
+        self.assertTrue(hasattr(_genome, "initializator"))
+        self.assertTrue(hasattr(_genome, "mutator"))
+        self.assertTrue(hasattr(_genome, "crossover"))
 
     def test_create1DBinary_len(self):
         _genome = G1DBinaryString.G1DBinaryString(length=5)
-        self.assertTrue(hasattr(_genome, 'genomeList'))
+        self.assertTrue(hasattr(_genome, "genomeList"))
         self.assertEqual(_genome.genomeSize, 5)
-        self.assertTrue(hasattr(_genome, 'initializator'))
-        self.assertTrue(hasattr(_genome, 'mutator'))
-        self.assertTrue(hasattr(_genome, 'crossover'))
+        self.assertTrue(hasattr(_genome, "initializator"))
+        self.assertTrue(hasattr(_genome, "mutator"))
+        self.assertTrue(hasattr(_genome, "crossover"))
 
     def test_1DBinarySetitem(self):
         _genome = G1DBinaryString.G1DBinaryString(length=5)
@@ -45,7 +45,7 @@ class G1DBinaryStringTestCase(TestCase):
         with self.assertRaises(ValueError):
             _genome[0] = 2
         with self.assertRaises(ValueError):
-            _genome[0:2] = [0,1,2]
+            _genome[0:2] = [0, 1, 2]
 
     def test_getBinary(self):
         _genome = G1DBinaryString.G1DBinaryString()
@@ -72,18 +72,17 @@ class G1DBinaryStringTestCase(TestCase):
 
 
 class G2DListTestCase(TestCase):
-
     # def setUp(self):
     #     self._stats = Statistics.Statistics()
 
     def test_create2DList_default(self):
         _genome = G2DList.G2DList(3, 3)
-        self.assertTrue(hasattr(_genome, 'width'))
-        self.assertTrue(hasattr(_genome, 'height'))
-        self.assertTrue(hasattr(_genome, 'genomeList'))
-        self.assertTrue(hasattr(_genome, 'initializator'))
-        self.assertTrue(hasattr(_genome, 'mutator'))
-        self.assertTrue(hasattr(_genome, 'crossover'))
+        self.assertTrue(hasattr(_genome, "width"))
+        self.assertTrue(hasattr(_genome, "height"))
+        self.assertTrue(hasattr(_genome, "genomeList"))
+        self.assertTrue(hasattr(_genome, "initializator"))
+        self.assertTrue(hasattr(_genome, "mutator"))
+        self.assertTrue(hasattr(_genome, "crossover"))
 
     def test_2DList_eq(self):
         _genome1 = G2DList.G2DList(3, 2)
@@ -118,16 +117,15 @@ class G2DListTestCase(TestCase):
 
 
 class G1DListTestCase(TestCase):
-
     # def setUp(self):
     #     self._stats = Statistics.Statistics()
 
     def test_create1DList_default(self):
         _genome = G1DList.G1DList()
-        self.assertTrue(hasattr(_genome, 'genomeSize'))
-        self.assertTrue(hasattr(_genome, 'initializator'))
-        self.assertTrue(hasattr(_genome, 'mutator'))
-        self.assertTrue(hasattr(_genome, 'crossover'))
+        self.assertTrue(hasattr(_genome, "genomeSize"))
+        self.assertTrue(hasattr(_genome, "initializator"))
+        self.assertTrue(hasattr(_genome, "mutator"))
+        self.assertTrue(hasattr(_genome, "crossover"))
 
     def test_1DList_mul(self):
         _genome1 = G1DList.G1DList(size=3)
@@ -156,17 +154,16 @@ class G1DListTestCase(TestCase):
 
 
 class G2DBinaryStringTestCase(TestCase):
-
     # def setUp(self):
     #     self._stats = Statistics.Statistics()
 
     def test_create2DBinary_default(self):
         _genome = G2DBinaryString.G2DBinaryString(3, 3)
-        self.assertTrue(hasattr(_genome, 'width'))
-        self.assertTrue(hasattr(_genome, 'height'))
-        self.assertTrue(hasattr(_genome, 'initializator'))
-        self.assertTrue(hasattr(_genome, 'mutator'))
-        self.assertTrue(hasattr(_genome, 'crossover'))
+        self.assertTrue(hasattr(_genome, "width"))
+        self.assertTrue(hasattr(_genome, "height"))
+        self.assertTrue(hasattr(_genome, "initializator"))
+        self.assertTrue(hasattr(_genome, "mutator"))
+        self.assertTrue(hasattr(_genome, "crossover"))
 
     def test_2DBinary_eq(self):
         _genome1 = G2DBinaryString.G2DBinaryString(3, 2)
@@ -189,11 +186,10 @@ class G2DBinaryStringTestCase(TestCase):
 
     def test_2DBinary_setitem(self):
         _genome = G2DBinaryString.G2DBinaryString(3, 3)
-        _genome.setItem(1,1,1)
-        self.assertEqual(_genome.getItem(1,1), 1)
+        _genome.setItem(1, 1, 1)
+        self.assertEqual(_genome.getItem(1, 1), 1)
         with self.assertRaises(ValueError):
             _genome.setItem(1, 1, 2)
-
 
     def test_2DBinary_iter(self):
         _genome = G2DBinaryString.G2DBinaryString(3, 3)

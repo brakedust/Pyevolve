@@ -2,7 +2,8 @@
 # 175-178, 198-202, 206-207, 216-220, 223, 226-229, 232, 239, 246, 250-252, 256-262, 270, 274, 278, 282-289
 
 # flake8: noqa
-from collections import Iterable
+# from collections import Iterable
+from typing import Iterable
 from unittest import TestCase
 
 from pyevolve import G1DBinaryString
@@ -19,14 +20,13 @@ from pyevolve.GTree import GTreeNodeGP
 
 
 class GAllelesTestCase(TestCase):
-
     def test_createAlleles_default(self):
         _alleles = GAllele.GAlleles(allele_list=None)
-        self.assertTrue(hasattr(_alleles, 'allele_list'), True)
-        self.assertTrue(hasattr(_alleles, 'homogeneous'), True)
+        self.assertTrue(hasattr(_alleles, "allele_list"), True)
+        self.assertTrue(hasattr(_alleles, "homogeneous"), True)
         self.assertEqual(_alleles.allele_list, [])
-        _alleles = GAllele.GAlleles(allele_list=[1,2,3])
-        self.assertEqual(_alleles.allele_list, [1,2,3])
+        _alleles = GAllele.GAlleles(allele_list=[1, 2, 3])
+        self.assertEqual(_alleles.allele_list, [1, 2, 3])
         _alleles = GAllele.GAlleles(homogeneous=True)
         self.assertEqual(_alleles.homogeneous, True)
 
@@ -39,7 +39,7 @@ class GAllelesTestCase(TestCase):
         _alleles1 = GAllele.GAlleles(allele_list=[1, 2, 3])
         _alleles1.add(4)
         self.assertEqual(_alleles1.allele_list, [1, 2, 3, 4])
-    
+
     def test_Alleles_slicing(self):
         # includes slice operation, getitem and setitem
         _alleles = GAllele.GAlleles(allele_list=[1, 2, 3])
@@ -76,18 +76,17 @@ class GAllelesTestCase(TestCase):
 
 
 class GAlleleListTestCase(TestCase):
-
     def test_createAlleleList_default(self):
         _allelelist = GAllele.GAlleleList()
         self.assertEqual(_allelelist.options, [])
         _allelelist = GAllele.GAlleleList(options=[1, 2, 3])
         self.assertEqual(_allelelist.options, [1, 2, 3])
-    
+
     def test_AlleleList_clear(self):
         _allelelist = GAllele.GAlleleList(options=[1, 2, 3])
         _allelelist.clear()
         self.assertEqual(_allelelist.options, [])
-    
+
     def test_AlleleList_getRandomAllele(self):
         _allelelist = GAllele.GAlleleList(options=[1, 2, 3])
         random_allele = _allelelist.getRandomAllele()
@@ -124,7 +123,6 @@ class GAlleleListTestCase(TestCase):
 
 
 class GAlleleRangeTestCase(TestCase):
-
     def test_createAlleleRange(self):
         _allelerange = GAllele.GAlleleRange(10, 20)
         self.assertEqual(_allelerange.beginEnd, [(10, 20)])
@@ -171,17 +169,13 @@ class GAlleleRangeTestCase(TestCase):
     def test_AlleleRange_getRandomAllele(self):
         _allelerange = GAllele.GAlleleRange(10, 20)
         random_allele = _allelerange.getRandomAllele()
-        self.assertTrue(random_allele,
-                        any([x[0] <= random_allele <= x[1] for x in _allelerange.beginEnd]))
+        self.assertTrue(random_allele, any([x[0] <= random_allele <= x[1] for x in _allelerange.beginEnd]))
         _allelerange.add(30, 40)
         random_allele = _allelerange.getRandomAllele()
-        self.assertTrue(random_allele,
-                        any([x[0] <= random_allele <= x[1] for x in _allelerange.beginEnd]))
+        self.assertTrue(random_allele, any([x[0] <= random_allele <= x[1] for x in _allelerange.beginEnd]))
         _allelerange = GAllele.GAlleleRange(1.0, 2.0, real=True)
         random_allele = _allelerange.getRandomAllele()
-        self.assertTrue(random_allele,
-                        any([x[0] <= random_allele <= x[1] for x in _allelerange.beginEnd]))
-
+        self.assertTrue(random_allele, any([x[0] <= random_allele <= x[1] for x in _allelerange.beginEnd]))
 
     def test_AlleleRange_real(self):
         _allelerange = GAllele.GAlleleRange(10, 20)

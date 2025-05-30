@@ -12,13 +12,13 @@ you'll find the class :class:`FunctionSlot.FunctionSlot`, which is the slot clas
 """
 
 from random import uniform as rand_uniform
-
+import typing
 from . import Util
 import collections
 
 
 class FunctionSlot(object):
-    """ FunctionSlot Class - The function slot
+    """FunctionSlot Class - The function slot
 
     Example:
        >>> genome.evaluator.set(eval_func)
@@ -51,46 +51,46 @@ class FunctionSlot(object):
     """
 
     def __init__(self, name="Anonymous Function", rand_apply=False):
-        """ The creator of the FunctionSlot Class """
+        """The creator of the FunctionSlot Class"""
         self.funcList = []
         self.funcWeights = []
         self.slotName = name
         self.rand_apply = rand_apply
 
     def __typeCheck(self, func):
-        """ Used internally to check if a function passed to the
+        """Used internally to check if a function passed to the
         function slot is callable. Otherwise raises a TypeError exception.
 
         :param func: the function object
         """
-        if not isinstance(func, collections.Callable):
+        if not isinstance(func, typing.Callable):
             Util.raiseException("The function must be a method or function", TypeError)
 
     def __iadd__(self, func):
-        """ To add more functions using the += operator
+        """To add more functions using the += operator
 
-           .. versionadded:: 0.6
-              The __iadd__ method.
+        .. versionadded:: 0.6
+           The __iadd__ method.
         """
         self.__typeCheck(func)
         self.funcList.append(func)
         return self
 
     def __getitem__(self, index):
-        """ Used to retrieve some slot function index """
+        """Used to retrieve some slot function index"""
         return self.funcList[index]
 
     def __setitem__(self, index, value):
-        """ Used to set the index slot function """
+        """Used to set the index slot function"""
         self.__typeCheck(value)
         self.funcList[index] = value
 
     def __iter__(self):
-        """ Return the function list iterator """
+        """Return the function list iterator"""
         return iter(self.funcList)
 
     def __len__(self):
-        """ Return the number of functions on the slot
+        """Return the number of functions on the slot
 
         .. versionadded:: 0.6
            The *__len__* method
@@ -98,7 +98,7 @@ class FunctionSlot(object):
         return len(self.funcList)
 
     def setRandomApply(self, flag=True):
-        """ Sets the random function application, in this mode, the
+        """Sets the random function application, in this mode, the
         function will randomly choose one slot to apply
 
         :param flag: True or False
@@ -110,13 +110,13 @@ class FunctionSlot(object):
         self.rand_apply = flag
 
     def clear(self):
-        """ Used to clear the functions in the slot """
+        """Used to clear the functions in the slot"""
         if len(self.funcList) > 0:
             del self.funcList[:]
             del self.funcWeights[:]
 
     def add(self, func, weight=0.5):
-        """ Used to add a function to the slot
+        """Used to add a function to the slot
 
         :param func: the function to be added in the slot
         :param weight: used when you enable the *random apply*, it's the weight
@@ -131,11 +131,11 @@ class FunctionSlot(object):
         self.funcWeights.append(weight)
 
     def isEmpty(self):
-        """ Return true if the function slot is empy """
-        return (len(self.funcList) == 0)
+        """Return true if the function slot is empy"""
+        return len(self.funcList) == 0
 
     def set(self, func, weight=0.5):
-        """ Used to clear all functions in the slot and add one
+        """Used to clear all functions in the slot and add one
 
         :param func: the function to be added in the slot
         :param weight: used when you enable the *random apply*, it's the weight
@@ -152,7 +152,7 @@ class FunctionSlot(object):
         self.add(func, weight)
 
     def apply(self, index, obj, **args):
-        """ Apply the index function
+        """Apply the index function
 
         :param index: the index of the function
         :param obj: this object is passes as parameter to the function
@@ -164,7 +164,7 @@ class FunctionSlot(object):
         return self.funcList[index](obj, **args)
 
     def applyFunctions(self, obj=None, **args):
-        """ Generator to apply all function slots in obj
+        """Generator to apply all function slots in obj
 
         :param obj: this object is passes as parameter to the function
         :param args: this args dictionary is passed to the function
@@ -188,7 +188,7 @@ class FunctionSlot(object):
             yield fobj(obj, **args)
 
     def __repr__(self):
-        """ String representation of FunctionSlot """
+        """String representation of FunctionSlot"""
         strRet = "Slot [%s] (Count: %d)\n" % (self.slotName, len(self.funcList))
 
         if len(self.funcList) <= 0:
