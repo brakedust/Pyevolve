@@ -1,4 +1,6 @@
-This is the new official Pyevolve repository.
+This repository was forked from BubbaVV/Pyevolve, which updates Perone/Pyevolve (the original authors) to work with Python 3.
+This repository fixes a few small issues to enable it to run in Python 3.13.  It also adds a pyproject.toml file to enable
+using `uv` to build and manage the project.
 
 The documentation (html rendered) is still hosted at sourceforge.net at http://pyevolve.sourceforge.net/0_6rc1/
 

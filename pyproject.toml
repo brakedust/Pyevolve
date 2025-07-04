@@ -2,7 +2,9 @@
 authors = [
   {name = "Christian S Perone", email = ""},
 ]
-dependencies = []
+dependencies = [
+    "future>=1.0.0",
+]
 description = "Add your description here"
 name = "pyevolve"
 readme = "README.md"
@@ -11,11 +13,10 @@ version = "0.6.0"
 
 [dependency-groups]
 dev = [
-  "coverage>=7.8.2",
   "flake8>=7.2.0",
-  "future>=1.0.0",
   "mock>=5.2.0",
   "pytest>=8.3.5",
+  "pytest-cover>=3.0.0",
 ]
 
 [tool.pytest.ini_options]
