@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 """
 
 :mod:`GSimpleGA` -- the genetic algorithm by itself
@@ -83,7 +84,7 @@ if sys_platform[:3] == "win":
 
 
 def RawScoreCriteria(ga_engine):
-    """ Terminate the evolution using the **bestrawscore** and **rounddecimal**
+    """Terminate the evolution using the **bestrawscore** and **rounddecimal**
     parameter obtained from the individual
 
     Example:
@@ -112,7 +113,7 @@ def RawScoreCriteria(ga_engine):
 
 
 def ConvergenceCriteria(ga_engine):
-    """ Terminate the evolution when the population have converged
+    """Terminate the evolution when the population have converged
 
     Example:
        >>> ga_engine.terminationCriteria.set(GSimpleGA.ConvergenceCriteria)
@@ -123,7 +124,7 @@ def ConvergenceCriteria(ga_engine):
 
 
 def RawStatsCriteria(ga_engine):
-    """ Terminate the evolution based on the raw stats
+    """Terminate the evolution based on the raw stats
 
     Example:
        >>> ga_engine.terminationCriteria.set(GSimpleGA.RawStatsCriteria)
@@ -137,7 +138,7 @@ def RawStatsCriteria(ga_engine):
 
 
 def FitnessStatsCriteria(ga_engine):
-    """ Terminate the evoltion based on the fitness stats
+    """Terminate the evoltion based on the fitness stats
 
     Example:
        >>> ga_engine.terminationCriteria.set(GSimpleGA.FitnessStatsCriteria)
@@ -152,7 +153,7 @@ def FitnessStatsCriteria(ga_engine):
 
 
 class GSimpleGA(object):
-    """ GA Engine Class - The Genetic Algorithm Core
+    """GA Engine Class - The Genetic Algorithm Core
 
     Example:
        >>> ga = GSimpleGA.GSimpleGA(genome)
@@ -213,7 +214,7 @@ class GSimpleGA(object):
     """
 
     def __init__(self, genome, seed=None, interactiveMode=True):
-        """ Initializator of GSimpleGA """
+        """Initializator of GSimpleGA"""
         if seed:
             random.seed(seed)
 
@@ -261,21 +262,21 @@ class GSimpleGA(object):
         logging.debug("A GA Engine was created, nGenerations=%d", self.nGenerations)
 
     def setGPMode(self, bool_value):
-        """ Sets the Genetic Programming mode of the GA Engine
+        """Sets the Genetic Programming mode of the GA Engine
 
         :param bool_value: True or False
         """
         self.GPMode = bool_value
 
     def getGPMode(self):
-        """ Get the Genetic Programming mode of the GA Engine
+        """Get the Genetic Programming mode of the GA Engine
 
         :rtype: True or False
         """
         return self.GPMode
 
     def __call__(self, *args, **kwargs):
-        """ A method to implement a callable object
+        """A method to implement a callable object
 
         Example:
            >>> ga_engine(freq_stats=10)
@@ -289,7 +290,7 @@ class GSimpleGA(object):
             return self.evolve()
 
     def setParams(self, **args):
-        """ Set the internal params
+        """Set the internal params
 
         Example:
            >>> ga.setParams(gp_terminals=['x', 'y'])
@@ -303,7 +304,7 @@ class GSimpleGA(object):
         self.internalParams.update(args)
 
     def getParam(self, key, nvl=None):
-        """ Gets an internal parameter
+        """Gets an internal parameter
 
         Example:
            >>> ga.getParam("gp_terminals")
@@ -318,7 +319,7 @@ class GSimpleGA(object):
         return self.internalParams.get(key, nvl)
 
     def setInteractiveGeneration(self, generation):
-        """ Sets the generation in which the GA must enter in the
+        """Sets the generation in which the GA must enter in the
         Interactive Mode
 
         :param generation: the generation number, use "-1" to disable
@@ -331,7 +332,7 @@ class GSimpleGA(object):
         self.interactiveGen = generation
 
     def getInteractiveGeneration(self):
-        """ returns the generation in which the GA must enter in the
+        """returns the generation in which the GA must enter in the
         Interactive Mode
 
         :rtype: the generation number or -1 if not set
@@ -342,7 +343,7 @@ class GSimpleGA(object):
         return self.interactiveGen
 
     def setElitismReplacement(self, numreplace):
-        """ Set the number of best individuals to copy to the next generation on the elitism
+        """Set the number of best individuals to copy to the next generation on the elitism
 
         :param numreplace: the number of individuals
 
@@ -355,7 +356,7 @@ class GSimpleGA(object):
         self.nElitismReplacement = numreplace
 
     def setInteractiveMode(self, flag=True):
-        """ Enable/disable the interactive mode
+        """Enable/disable the interactive mode
 
         :param flag: True or False
 
@@ -368,7 +369,7 @@ class GSimpleGA(object):
         self.interactiveMode = flag
 
     def __repr__(self):
-        """ The string representation of the GA Engine """
+        """The string representation of the GA Engine"""
         minimax_type = list(Consts.minimaxType.keys())[list(Consts.minimaxType.values()).index(self.minimax)]
         ret = "- GSimpleGA\n"
         ret += "\tGP Mode:\t\t %s\n" % self.getGPMode()
@@ -387,7 +388,7 @@ class GSimpleGA(object):
         return ret
 
     def setMultiProcessing(self, flag=True, full_copy=False, max_processes=None):
-        """ Sets the flag to enable/disable the use of python multiprocessing module.
+        """Sets the flag to enable/disable the use of python multiprocessing module.
         Use this option when you have more than one core on your CPU and when your
         evaluation function is very slow.
 
@@ -431,7 +432,7 @@ class GSimpleGA(object):
         self.internalPop.setMultiProcessing(flag, full_copy, max_processes)
 
     def setMigrationAdapter(self, migration_adapter=None):
-        """ Sets the Migration Adapter
+        """Sets the Migration Adapter
 
         .. versionadded:: 0.6
            The `setMigrationAdapter` method.
@@ -442,7 +443,7 @@ class GSimpleGA(object):
             self.migrationAdapter.setGAEngine(self)
 
     def setDBAdapter(self, dbadapter=None):
-        """ Sets the DB Adapter of the GA Engine
+        """Sets the DB Adapter of the GA Engine
 
         :param dbadapter: one of the :mod:`DBAdapters` classes instance
 
@@ -454,7 +455,7 @@ class GSimpleGA(object):
         self.dbAdapter = dbadapter
 
     def setPopulationSize(self, size):
-        """ Sets the population size, calls setPopulationSize() of GPopulation
+        """Sets the population size, calls setPopulationSize() of GPopulation
 
         :param size: the population size
 
@@ -466,7 +467,7 @@ class GSimpleGA(object):
         self.internalPop.setPopulationSize(size)
 
     def setSortType(self, sort_type):
-        """ Sets the sort type, Consts.sortType["raw"]/Consts.sortType["scaled"]
+        """Sets the sort type, Consts.sortType["raw"]/Consts.sortType["scaled"]
 
         Example:
            >>> ga_engine.setSortType(Consts.sortType["scaled"])
@@ -479,7 +480,7 @@ class GSimpleGA(object):
         self.internalPop.sortType = sort_type
 
     def setMutationRate(self, rate):
-        """ Sets the mutation rate, between 0.0 and 1.0
+        """Sets the mutation rate, between 0.0 and 1.0
 
         :param rate: the rate, between 0.0 and 1.0
 
@@ -489,7 +490,7 @@ class GSimpleGA(object):
         self.pMutation = rate
 
     def setCrossoverRate(self, rate):
-        """ Sets the crossover rate, between 0.0 and 1.0
+        """Sets the crossover rate, between 0.0 and 1.0
 
         :param rate: the rate, between 0.0 and 1.0
 
@@ -499,7 +500,7 @@ class GSimpleGA(object):
         self.pCrossover = rate
 
     def setGenerations(self, num_gens):
-        """ Sets the number of generations to evolve
+        """Sets the number of generations to evolve
 
         :param num_gens: the number of generations
 
@@ -509,7 +510,7 @@ class GSimpleGA(object):
         self.nGenerations = num_gens
 
     def getGenerations(self):
-        """ Return the number of generations to evolve
+        """Return the number of generations to evolve
 
         :rtype: the number of generations
 
@@ -519,7 +520,7 @@ class GSimpleGA(object):
         return self.nGenerations
 
     def getMinimax(self):
-        """ Gets the minimize/maximize mode
+        """Gets the minimize/maximize mode
 
         :rtype: the Consts.minimaxType type
 
@@ -527,7 +528,7 @@ class GSimpleGA(object):
         return self.minimax
 
     def setMinimax(self, mtype):
-        """ Sets the minimize/maximize mode, use Consts.minimaxType
+        """Sets the minimize/maximize mode, use Consts.minimaxType
 
         :param mtype: the minimax mode, from Consts.minimaxType
 
@@ -537,7 +538,7 @@ class GSimpleGA(object):
         self.minimax = mtype
 
     def getCurrentGeneration(self):
-        """ Gets the current generation
+        """Gets the current generation
 
         :rtype: the current generation
 
@@ -545,7 +546,7 @@ class GSimpleGA(object):
         return self.currentGeneration
 
     def setElitism(self, flag):
-        """ Sets the elitism option, True or False
+        """Sets the elitism option, True or False
 
         :param flag: True or False
 
@@ -555,7 +556,7 @@ class GSimpleGA(object):
         self.elitism = flag
 
     def getDBAdapter(self):
-        """ Gets the DB Adapter of the GA Engine
+        """Gets the DB Adapter of the GA Engine
 
         :rtype: a instance from one of the :mod:`DBAdapters` classes
 
@@ -563,21 +564,21 @@ class GSimpleGA(object):
         return self.dbAdapter
 
     def setMaxTime(self, seconds):
-        """ Sets the maximun evolve time of the GA Engine
+        """Sets the maximun evolve time of the GA Engine
 
         :param seconds: maximum time in seconds
         """
         self.max_time = seconds
 
     def getMaxTime(self):
-        """ Get the maximun evolve time of the GA Engine
+        """Get the maximun evolve time of the GA Engine
 
         :rtype: True or False
         """
         return self.max_time
 
     def bestIndividual(self):
-        """ Returns the population best individual
+        """Returns the population best individual
 
         :rtype: the best individual
 
@@ -585,7 +586,7 @@ class GSimpleGA(object):
         return self.internalPop.bestRaw()
 
     def worstIndividual(self):
-        """ Returns the population worst individual
+        """Returns the population worst individual
 
         :rtype: the best individual
 
@@ -593,18 +594,18 @@ class GSimpleGA(object):
         return self.internalPop.worstRaw()
 
     def __gp_catch_functions(self, prefix):
-        """ Internally used to catch functions with some specific prefix
-        as non-terminals of the GP core """
+        """Internally used to catch functions with some specific prefix
+        as non-terminals of the GP core"""
         import __main__ as mod_main
 
         function_set = {}
 
         main_dict = mod_main.__dict__
         for obj, addr in list(main_dict.items()):
-            if obj[0:len(prefix)] == prefix:
+            if obj[0 : len(prefix)] == prefix:
                 try:
                     op_len = addr.__code__.co_argcount
-                except: # noqa # TODO need to do some investigate here
+                except:  # noqa # TODO need to do some investigate here
                     continue
                 function_set[obj] = op_len
 
@@ -614,13 +615,13 @@ class GSimpleGA(object):
         self.setParams(gp_function_set=function_set)
 
     def initialize(self):
-        """ Initializes the GA Engine. Create and initialize population """
+        """Initializes the GA Engine. Create and initialize population"""
         self.internalPop.create(minimax=self.minimax)
         self.internalPop.initialize(ga_engine=self)
         logging.debug("The GA Engine was initialized !")
 
     def getPopulation(self):
-        """ Return the internal population of GA Engine
+        """Return the internal population of GA Engine
 
         :rtype: the population (:class:`GPopulation.GPopulation`)
 
@@ -628,15 +629,15 @@ class GSimpleGA(object):
         return self.internalPop
 
     def getStatistics(self):
-        """ Gets the Statistics class instance of current generation
+        """Gets the Statistics class instance of current generation
 
         :rtype: the statistics instance (:class:`Statistics.Statistics`)
 
         """
         return self.internalPop.getStatistics()
 
-    def step(self):
-        """ Just do one step in evolution, one generation """
+    def step(self, generation=1):
+        """Just do one step in evolution, one generation"""
         newPop = GPopulation(self.internalPop)
         logging.debug("Population was cloned.")
 
@@ -684,7 +685,7 @@ class GSimpleGA(object):
             newPop.internalPop.append(sister)
 
         logging.debug("Evaluating the new created population.")
-        newPop.evaluate()
+        newPop.evaluate(generation=generation)
 
         if self.elitism:
             logging.debug("Doing elitism.")
@@ -715,7 +716,7 @@ class GSimpleGA(object):
         return self.currentGeneration == self.nGenerations
 
     def printStats(self):
-        """ Print generation statistics
+        """Print generation statistics
 
         :rtype: the printed statistics as string
 
@@ -732,19 +733,19 @@ class GSimpleGA(object):
         return message + stat_ret
 
     def printTimeElapsed(self):
-        """ Shows the time elapsed since the begin of evolution """
+        """Shows the time elapsed since the begin of evolution"""
         total_time = time() - self.time_init
         print("Total time elapsed: %.3f seconds." % total_time)
         return total_time
 
     def dumpStatsDB(self):
-        """ Dumps the current statistics to database adapter """
+        """Dumps the current statistics to database adapter"""
         logging.debug("Dumping stats to the DB Adapter")
         self.internalPop.statistics()
         self.dbAdapter.insert(self)
 
     def evolve(self, freq_stats=0):
-        """ Do all the generations until the termination criteria, accepts
+        """Do all the generations until the termination criteria, accepts
         the freq_stats (default is 0) to dump statistics at n-generation
 
         Example:
@@ -759,6 +760,7 @@ class GSimpleGA(object):
            the return of the best individual
 
         """
+        this_generation = 0
 
         stopFlagCallback = False
         stopFlagTerminationCriteria = False
@@ -777,7 +779,7 @@ class GSimpleGA(object):
                 self.__gp_catch_functions(gp_function_prefix)
 
         self.initialize()
-        self.internalPop.evaluate()
+        self.internalPop.evaluate(generation=this_generation)
         self.internalPop.sort()
         logging.debug("Starting loop over evolutionary algorithm.")
 
@@ -790,7 +792,7 @@ class GSimpleGA(object):
                     self.internalPop.sort()
 
                 if not self.stepCallback.isEmpty():
-                    for it in self.stepCallback.applyFunctions(self):
+                    for it in self.stepCallback.applyFunctions(self, generation=this_generation):
                         stopFlagCallback = it
 
                 if not self.terminationCriteria.isEmpty():
@@ -823,13 +825,15 @@ class GSimpleGA(object):
                             if ord(msvcrt.getch()) == Consts.CDefESCKey:
                                 print("Loading modules for Interactive Mode...", end=" ")
                                 logging.debug(
-                                    "Windows Interactive Mode key detected ! generation=%d",
-                                    self.getCurrentGeneration()
+                                    "Windows Interactive Mode key detected ! generation=%d", self.getCurrentGeneration()
                                 )
                                 from pyevolve import Interaction
+
                                 print(" done !")
-                                interact_banner = "## Pyevolve v.%s - Interactive Mode ##\n" \
-                                                  "Press CTRL-Z to quit interactive mode." % (pyevolve.__version__,)
+                                interact_banner = (
+                                    "## Pyevolve v.%s - Interactive Mode ##\n"
+                                    "Press CTRL-Z to quit interactive mode." % (pyevolve.__version__,)
+                                )
                                 session_locals = {
                                     "ga_engine": self,
                                     "population": self.getPopulation(),
@@ -843,22 +847,23 @@ class GSimpleGA(object):
                     if self.getInteractiveGeneration() >= 0 and is_interactive_generation:
                         print("Loading modules for Interactive Mode...", end=" ")
                         logging.debug(
-                            "Manual Interactive Mode key detected ! generation=%d",
-                            self.getCurrentGeneration()
+                            "Manual Interactive Mode key detected ! generation=%d", self.getCurrentGeneration()
                         )
                         from pyevolve import Interaction
+
                         print(" done !")
                         interact_banner = "## Pyevolve v.%s - Interactive Mode ##" % (pyevolve.__version__,)
                         session_locals = {
                             "ga_engine": self,
                             "population": self.getPopulation(),
                             "pyevolve": pyevolve,
-                            "it": Interaction
+                            "it": Interaction,
                         }
                         print()
                         code.interact(interact_banner, local=session_locals)
 
-                if self.step():
+                this_generation += 1
+                if self.step(generation=this_generation):
                     break
 
         except KeyboardInterrupt:
@@ -883,7 +888,7 @@ class GSimpleGA(object):
         return self.bestIndividual()
 
     def select(self, **args):
-        """ Select one individual from population
+        """Select one individual from population
 
         :param args: this parameters will be sent to the selector
 

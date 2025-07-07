@@ -9,6 +9,10 @@ dist/
 
 build/
 
-\.idea/
+.idea/
 
-\.coverage
+.coverage
+
+.vscode
+
+__pycache__

@@ -32,8 +32,8 @@ Class
 
 """
 
-from future.builtins import range
-from functools import cmp_to_key
+# from future.builtins import range
+from functools import cmp_to_key, partial
 
 from . import Consts
 from . import Util
@@ -41,9 +41,11 @@ from .FunctionSlot import FunctionSlot
 from .Statistics import Statistics
 from math import sqrt as math_sqrt
 import logging
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 
 try:
     from multiprocessing import cpu_count, Pool
+
     CPU_COUNT = cpu_count()
     MULTI_PROCESSING = True if CPU_COUNT > 1 else False
     logging.debug("You have %d CPU cores, so the multiprocessing state is %s", CPU_COUNT, MULTI_PROCESSING)
@@ -53,7 +55,7 @@ except ImportError:
 
 
 def key_raw_score(individual):
-    """ A key function to return raw score
+    """A key function to return raw score
 
     :param individual: the individual instance
     :rtype: the individual raw score
@@ -65,7 +67,7 @@ def key_raw_score(individual):
 
 
 def key_fitness_score(individual):
-    """ A key function to return fitness score, used by max()/min()
+    """A key function to return fitness score, used by max()/min()
 
     :param individual: the individual instance
     :rtype: the individual fitness score
@@ -77,19 +79,19 @@ def key_fitness_score(individual):
 
 
 def multiprocessing_eval(ind):
-    """ Internal used by the multiprocessing """
+    """Internal used by the multiprocessing"""
     ind.evaluate()
     return ind.score
 
 
 def multiprocessing_eval_full(ind):
-    """ Internal used by the multiprocessing (full copy)"""
+    """Internal used by the multiprocessing (full copy)"""
     ind.evaluate()
     return ind
 
 
 class GPopulation(object):
-    """ GPopulation Class - The container for the population
+    """GPopulation Class - The container for the population
 
     **Examples**
        Get the population from the :class:`GSimpleGA.GSimpleGA` (GA Engine) instance
@@ -124,7 +126,7 @@ class GPopulation(object):
     """
 
     def __init__(self, genome):
-        """ The GPopulation Class creator """
+        """The GPopulation Class creator"""
 
         if isinstance(genome, GPopulation):
             self.oneSelfGenome = genome.oneSelfGenome
@@ -164,7 +166,7 @@ class GPopulation(object):
         self.stats = Statistics()
 
     def setMultiProcessing(self, flag=True, full_copy=False, max_processes=None):
-        """ Sets the flag to enable/disable the use of python multiprocessing module.
+        """Sets the flag to enable/disable the use of python multiprocessing module.
         Use this option when you have more than one core on your CPU and when your
         evaluation function is very slow.
         The parameter "full_copy" defines where the individual data should be copied back
@@ -186,7 +188,7 @@ class GPopulation(object):
         self.multiProcessing = (flag, full_copy, max_processes)
 
     def setMinimax(self, minimax):
-        """ Sets the population minimax
+        """Sets the population minimax
 
         Example:
            >>> pop.setMinimax(Consts.minimaxType["maximize"])
@@ -197,13 +199,15 @@ class GPopulation(object):
         self.minimax = minimax
 
     def __repr__(self):
-        """ Returns the string representation of the population """
+        """Returns the string representation of the population"""
         ret = "- GPopulation\n"
         ret += "\tPopulation Size:\t %d\n" % (self.popSize,)
-        ret += "\tSort Type:\t\t %s\n" % \
-               (list(Consts.sortType.keys())[list(Consts.sortType.values()).index(self.sortType)].capitalize(),)
-        ret += "\tMinimax Type:\t\t %s\n" % \
-               (list(Consts.minimaxType.keys())[list(Consts.minimaxType.values()).index(self.minimax)].capitalize(),)
+        ret += "\tSort Type:\t\t %s\n" % (
+            list(Consts.sortType.keys())[list(Consts.sortType.values()).index(self.sortType)].capitalize(),
+        )
+        ret += "\tMinimax Type:\t\t %s\n" % (
+            list(Consts.minimaxType.keys())[list(Consts.minimaxType.values()).index(self.minimax)].capitalize(),
+        )
         for slot in self.allSlots:
             ret += "\t" + slot.__repr__()
         ret += "\n"
@@ -211,29 +215,29 @@ class GPopulation(object):
         return ret
 
     def __len__(self):
-        """ Return the length of population """
+        """Return the length of population"""
         return len(self.internalPop)
 
     def __getitem__(self, key):
-        """ Returns the specified individual from population """
+        """Returns the specified individual from population"""
         return self.internalPop[key]
 
     def __iter__(self):
-        """ Returns the iterator of the population """
+        """Returns the iterator of the population"""
         return iter(self.internalPop)
 
     def __setitem__(self, key, value):
-        """ Set an individual of population """
+        """Set an individual of population"""
         self.internalPop[key] = value
         self.clearFlags()
 
     def clearFlags(self):
-        """ Clear the sorted and statted internal flags """
+        """Clear the sorted and statted internal flags"""
         self.sorted = False
         self.statted = False
 
     def getStatistics(self):
-        """ Return a Statistics class for statistics
+        """Return a Statistics class for statistics
 
         :rtype: the :class:`Statistics.Statistics` instance
 
@@ -242,7 +246,7 @@ class GPopulation(object):
         return self.stats
 
     def statistics(self):
-        """ Do statistical analysis of population and set 'statted' to True """
+        """Do statistical analysis of population and set 'statted' to True"""
         if self.statted:
             return
         logging.debug("Running statistical calculations")
@@ -273,7 +277,7 @@ class GPopulation(object):
         self.statted = True
 
     def bestFitness(self, index=0):
-        """ Return the best scaled fitness individual of population
+        """Return the best scaled fitness individual of population
 
         :param index: the *index* best individual
         :rtype: the individual
@@ -283,7 +287,7 @@ class GPopulation(object):
         return self.internalPop[index]
 
     def worstFitness(self):
-        """ Return the worst scaled fitness individual of the population
+        """Return the worst scaled fitness individual of the population
 
         :rtype: the individual
 
@@ -292,7 +296,7 @@ class GPopulation(object):
         return self.internalPop[-1]
 
     def bestRaw(self, index=0):
-        """ Return the best raw score individual of population
+        """Return the best raw score individual of population
 
         :param index: the *index* best raw individual
         :rtype: the individual
@@ -308,7 +312,7 @@ class GPopulation(object):
             return self.internalPopRaw[index]
 
     def worstRaw(self):
-        """ Return the worst raw score individual of population
+        """Return the worst raw score individual of population
 
         :rtype: the individual
 
@@ -323,10 +327,10 @@ class GPopulation(object):
             return self.internalPopRaw[-1]
 
     def sort(self):
-        """ Sort the population """
+        """Sort the population"""
         if self.sorted:
             return
-        rev = (self.minimax == Consts.minimaxType["maximize"])
+        rev = self.minimax == Consts.minimaxType["maximize"]
 
         if self.sortType == Consts.sortType["raw"]:
             # TODO update to proper python3 sorting
@@ -341,7 +345,7 @@ class GPopulation(object):
         self.sorted = True
 
     def setPopulationSize(self, size):
-        """ Set the population size
+        """Set the population size
 
         :param size: the population size
 
@@ -349,7 +353,7 @@ class GPopulation(object):
         self.popSize = size
 
     def setSortType(self, sort_type):
-        """ Sets the sort type
+        """Sets the sort type
 
         Example:
            >>> pop.setSortType(Consts.sortType["scaled"])
@@ -360,7 +364,7 @@ class GPopulation(object):
         self.sortType = sort_type
 
     def create(self, **args):
-        """ Clone the example genome to fill the population """
+        """Clone the example genome to fill the population"""
         self.minimax = args["minimax"]
         self.internalPop = [self.oneSelfGenome.clone() for i in range(self.popSize)]
         self.clearFlags()
@@ -371,8 +375,8 @@ class GPopulation(object):
                 return True
 
     def initialize(self, **args):
-        """ Initialize all individuals of population,
-        this calls the initialize() of individuals """
+        """Initialize all individuals of population,
+        this calls the initialize() of individuals"""
         logging.debug("Initializing the population")
 
         if self.oneSelfGenome.getParam("full_diversity", True) and hasattr(self.oneSelfGenome, "compare"):
@@ -386,8 +390,8 @@ class GPopulation(object):
                 gen.initialize(**args)
         self.clearFlags()
 
-    def evaluate(self, **args):
-        """ Evaluate all individuals in population, calls the evaluate() method of individuals
+    def evaluate_original(self, **args):
+        """Evaluate all individuals in population, calls the evaluate() method of individuals
 
         :param args: this params are passed to the evaluation function
 
@@ -416,8 +420,52 @@ class GPopulation(object):
 
         self.clearFlags()
 
+    def evaluate(self, **args):
+        """Evaluate all individuals in population, calls the evaluate() method of individuals
+
+        :param args: this params are passed to the evaluation function
+
+        """
+        from time import sleep
+
+        # We have multiprocessing
+        if self.multiProcessing[0] and MULTI_PROCESSING:
+            logging.debug("Evaluating the population using the multiprocessing method")
+            futures = {}
+            with ThreadPoolExecutor(max_workers=self.multiProcessing[2]) as pool:
+                for m, ind in enumerate(self.internalPop):
+                    these_args = args | {"member": m}
+                    func = partial(ind.evaluate, **these_args)
+                    futures[pool.submit(func)] = these_args
+                    sleep(0.5)
+
+                for f in as_completed(futures):
+                    print(f"Finished {futures[f]}")
+
+            # proc_pool = Pool(processes=self.multiProcessing[2])
+
+            # # Multiprocessing full_copy parameter
+            # if self.multiProcessing[1]:
+            #     results = proc_pool.map(multiprocessing_eval_full, self.internalPop)
+            #     proc_pool.close()
+            #     proc_pool.join()
+            #     for i in range(len(self.internalPop)):
+            #         self.internalPop[i] = results[i]
+            # else:
+            #     results = proc_pool.map(multiprocessing_eval, self.internalPop)
+            #     proc_pool.close()
+            #     proc_pool.join()
+            #     for individual, score in zip(self.internalPop, results):
+            #         individual.score = score
+        else:
+            for m, ind in enumerate(self.internalPop):
+                args |= {"member": m}
+                ind.evaluate(**args)
+
+        self.clearFlags()
+
     def scale(self, **args):
-        """ Scale the population using the scaling method
+        """Scale the population using the scaling method
 
         :param args: this parameter is passed to the scale method
 
@@ -436,11 +484,14 @@ class GPopulation(object):
         self.sorted = False
 
     def printStats(self):
-        """ Print statistics of the current population """
+        """Print statistics of the current population"""
         message = ""
         if self.sortType == Consts.sortType["scaled"]:
-            message = "Max/Min/Avg Fitness(Raw) \
-            [%(fitMax).2f(%(rawMax).2f)/%(fitMin).2f(%(rawMin).2f)/%(fitAve).2f(%(rawAve).2f)]" % self.stats
+            message = (
+                "Max/Min/Avg Fitness(Raw) \
+            [%(fitMax).2f(%(rawMax).2f)/%(fitMin).2f(%(rawMin).2f)/%(fitAve).2f(%(rawAve).2f)]"
+                % self.stats
+            )
         else:
             message = "Max/Min/Avg Raw [%(rawMax).2f/%(rawMin).2f/%(rawAve).2f]" % self.stats
         logging.info(message)
@@ -448,7 +499,7 @@ class GPopulation(object):
         return message
 
     def copy(self, pop):
-        """ Copy current population to 'pop'
+        """Copy current population to 'pop'
 
         :param pop: the destination population
 
@@ -463,7 +514,7 @@ class GPopulation(object):
         pop.multiProcessing = self.multiProcessing
 
     def getParam(self, key, nvl=None):
-        """ Gets an internal parameter
+        """Gets an internal parameter
 
         Example:
            >>> population.getParam("tournamentPool")
@@ -476,7 +527,7 @@ class GPopulation(object):
         return self.internalParams.get(key, nvl)
 
     def setParams(self, **args):
-        """ Gets an internal parameter
+        """Gets an internal parameter
 
         Example:
            >>> population.setParams(tournamentPool=5)
@@ -489,13 +540,13 @@ class GPopulation(object):
         self.internalParams.update(args)
 
     def clear(self):
-        """ Remove all individuals from population """
+        """Remove all individuals from population"""
         del self.internalPop[:]
         del self.internalPopRaw[:]
         self.clearFlags()
 
     def clone(self):
-        """ Return a brand-new cloned population """
+        """Return a brand-new cloned population"""
         newpop = GPopulation(self.oneSelfGenome)
         self.copy(newpop)
         return newpop

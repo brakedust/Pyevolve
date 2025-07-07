@@ -3,13 +3,13 @@ authors = [
   {name = "Christian S Perone", email = ""},
 ]
 dependencies = [
-    "future>=1.0.0",
+  "future>=1.0.0",
 ]
 description = "Add your description here"
 name = "pyevolve"
 readme = "README.md"
 requires-python = ">=3.13.2"
-version = "0.6.0"
+version = "0.6.2"
 
 [dependency-groups]
 dev = [
